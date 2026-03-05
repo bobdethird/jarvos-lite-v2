@@ -13,7 +13,7 @@ import type { DesmosToolAction } from "@/lib/ai/agents/desmos/tools";
 import { ChatbotError } from "@/lib/errors";
 import type { Attachment, ChatMessage } from "@/lib/types";
 import { fetchWithErrorHandlers, generateUUID } from "@/lib/utils";
-import { ChatHeader } from "./chat-header";
+import { DesmosHeader } from "./desmos-header";
 import {
   DesmosCalculatorStandalone,
   type DesmosCalculatorHandle,
@@ -145,7 +145,7 @@ export function DesmosAgent({
 
   return (
     <div className="flex h-dvh w-full flex-col">
-      <ChatHeader chatId={id} />
+      <DesmosHeader />
 
       <div className="relative min-h-0 flex-1">
         <DesmosCalculatorStandalone
