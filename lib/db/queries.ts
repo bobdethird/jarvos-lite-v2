@@ -71,10 +71,12 @@ export async function createGuestUser() {
       id: user.id,
       email: user.email,
     });
-  } catch (_error) {
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : "Unknown database error";
     throw new ChatbotError(
       "bad_request:database",
-      "Failed to create guest user"
+      `Failed to create guest user: ${message}`
     );
   }
 }
