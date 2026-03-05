@@ -62,8 +62,7 @@ export async function POST(request: Request) {
   }
 
   try {
-    const { id, message, messages, selectedChatModel, selectedVisibilityType } =
-      requestBody;
+    const { id, message, messages, selectedChatModel } = requestBody;
 
     const [botResult, session] = await Promise.all([checkBotId(), auth()]);
 
@@ -110,7 +109,6 @@ export async function POST(request: Request) {
         id,
         userId: session.user.id,
         title: "New chat",
-        visibility: selectedVisibilityType,
       });
       titlePromise = generateTitleFromUserMessage({ message });
     }
