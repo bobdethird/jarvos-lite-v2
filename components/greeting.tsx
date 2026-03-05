@@ -19,6 +19,7 @@ import {
   NewspaperIcon,
   WalletIcon,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import type { ReactNode } from "react";
 
 type AppItem = {
@@ -26,6 +27,7 @@ type AppItem = {
   icon: ReactNode;
   color: string;
   action?: string;
+  href?: string;
 };
 
 const apps: AppItem[] = [
@@ -68,7 +70,7 @@ const apps: AppItem[] = [
     name: "Calculator",
     icon: <CalculatorIcon className="size-7 md:size-8" />,
     color: "bg-gradient-to-br from-zinc-600 via-zinc-700 to-zinc-800",
-    action: "Open the graphing calculator",
+    href: "/desmos",
   },
   {
     name: "Clock",
@@ -117,6 +119,8 @@ export const Greeting = ({
 }: {
   onAppAction?: (message: string) => void;
 }) => {
+  const router = useRouter();
+
   return (
     <div className="flex size-full flex-col items-center justify-center px-6 py-8">
       <motion.div
@@ -152,7 +156,9 @@ export const Greeting = ({
             className="group flex w-[72px] flex-col items-center gap-1.5 md:w-[80px]"
             initial={{ opacity: 0, scale: 0.8 }}
             onClick={() => {
-              if (app.action && onAppAction) {
+              if (app.href) {
+                router.push(app.href);
+              } else if (app.action && onAppAction) {
                 onAppAction(app.action);
               }
             }}

@@ -66,6 +66,7 @@ function PureMultimodalInput({
   className,
   selectedModelId,
   onModelChange,
+  skipNavigation,
 }: {
   chatId: string;
   input: string;
@@ -80,6 +81,7 @@ function PureMultimodalInput({
   className?: string;
   selectedModelId: string;
   onModelChange?: (modelId: string) => void;
+  skipNavigation?: boolean;
 }) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { width } = useWindowSize();
@@ -114,7 +116,7 @@ function PureMultimodalInput({
   }, []);
 
   const [localStorageInput, setLocalStorageInput] = useLocalStorage(
-    "input",
+    `input-${chatId}`,
     ""
   );
 
@@ -142,7 +144,9 @@ function PureMultimodalInput({
   const [uploadQueue, setUploadQueue] = useState<string[]>([]);
 
   const submitForm = useCallback(() => {
-    window.history.pushState({}, "", `/chat/${chatId}`);
+    if (!skipNavigation) {
+      window.history.pushState({}, "", `/chat/${chatId}`);
+    }
 
     sendMessage({
       role: "user",
@@ -178,6 +182,7 @@ function PureMultimodalInput({
     width,
     chatId,
     resetHeight,
+    skipNavigation,
   ]);
 
   const uploadFile = useCallback(async (file: File) => {
@@ -417,6 +422,9 @@ export const MultimodalInput = memo(
       return false;
     }
     if (prevProps.selectedModelId !== nextProps.selectedModelId) {
+      return false;
+    }
+    if (prevProps.skipNavigation !== nextProps.skipNavigation) {
       return false;
     }
 
