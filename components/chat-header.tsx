@@ -6,6 +6,7 @@ import { memo } from "react";
 import { useWindowSize } from "usehooks-ts";
 import { SidebarToggle } from "@/components/sidebar-toggle";
 import { Button } from "@/components/ui/button";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { PlusIcon, VercelIcon } from "./icons";
 import { useSidebar } from "./ui/sidebar";
 
@@ -24,17 +25,24 @@ function PureChatHeader({
       <SidebarToggle />
 
       {(!open || windowWidth < 768) && (
-        <Button
-          className="order-2 ml-auto h-8 px-2 md:order-1 md:ml-0 md:h-fit md:px-2"
-          onClick={() => {
-            router.push("/");
-            router.refresh();
-          }}
-          variant="outline"
-        >
-          <PlusIcon />
-          <span className="md:sr-only">New Chat</span>
-        </Button>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              className="order-2 ml-auto h-8 px-2 md:order-1 md:ml-0 md:h-fit md:px-2"
+              onClick={() => {
+                router.push("/");
+                router.refresh();
+              }}
+              variant="outline"
+            >
+              <PlusIcon />
+              <span className="md:sr-only">New Chat</span>
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent align="start" className="hidden md:block">
+            New Chat
+          </TooltipContent>
+        </Tooltip>
       )}
 
       <Button
