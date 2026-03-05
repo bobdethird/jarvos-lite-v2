@@ -25,6 +25,7 @@ type AppItem = {
   name: string;
   icon: ReactNode;
   color: string;
+  action?: string;
 };
 
 const apps: AppItem[] = [
@@ -67,6 +68,7 @@ const apps: AppItem[] = [
     name: "Calculator",
     icon: <CalculatorIcon className="size-7 md:size-8" />,
     color: "bg-gradient-to-br from-zinc-600 via-zinc-700 to-zinc-800",
+    action: "Open the graphing calculator",
   },
   {
     name: "Clock",
@@ -110,7 +112,11 @@ const apps: AppItem[] = [
   },
 ];
 
-export const Greeting = () => {
+export const Greeting = ({
+  onAppAction,
+}: {
+  onAppAction?: (message: string) => void;
+}) => {
   return (
     <div className="flex size-full flex-col items-center justify-center px-6 py-8">
       <motion.div
@@ -145,6 +151,11 @@ export const Greeting = () => {
             animate={{ opacity: 1, scale: 1 }}
             className="group flex w-[72px] flex-col items-center gap-1.5 md:w-[80px]"
             initial={{ opacity: 0, scale: 0.8 }}
+            onClick={() => {
+              if (app.action && onAppAction) {
+                onAppAction(app.action);
+              }
+            }}
             transition={{ delay: 0.5 + i * 0.03, duration: 0.3 }}
             type="button"
           >

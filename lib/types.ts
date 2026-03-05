@@ -34,6 +34,7 @@ export type CustomUIDataTypes = {
   imageDelta: string;
   sheetDelta: string;
   codeDelta: string;
+  desmosDelta: string;
   suggestion: Suggestion;
   appendMessage: string;
   id: string;

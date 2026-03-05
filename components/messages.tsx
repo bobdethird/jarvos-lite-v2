@@ -14,6 +14,7 @@ type MessagesProps = {
   votes: Vote[] | undefined;
   messages: ChatMessage[];
   setMessages: UseChatHelpers<ChatMessage>["setMessages"];
+  sendMessage: UseChatHelpers<ChatMessage>["sendMessage"];
   regenerate: UseChatHelpers<ChatMessage>["regenerate"];
   isReadonly: boolean;
   isArtifactVisible: boolean;
@@ -27,6 +28,7 @@ function PureMessages({
   votes,
   messages,
   setMessages,
+  sendMessage,
   regenerate,
   isReadonly,
   selectedModelId: _selectedModelId,
@@ -51,7 +53,14 @@ function PureMessages({
       >
         {messages.length === 0 ? (
           <div className="flex h-full items-center justify-center">
-            <Greeting />
+            <Greeting
+              onAppAction={(message) => {
+                sendMessage({
+                  role: "user",
+                  parts: [{ type: "text", text: message }],
+                });
+              }}
+            />
           </div>
         ) : (
           <div className="mx-auto flex min-w-0 max-w-4xl flex-col gap-4 px-2 py-4 md:gap-6 md:px-4">

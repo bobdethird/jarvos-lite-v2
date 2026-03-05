@@ -15,6 +15,8 @@ This is a guide for using artifacts tools: \`createDocument\` and \`updateDocume
 - For content users will likely save/reuse (emails, code, essays, etc.)
 - When explicitly requested to create a document
 - For when content contains a single code snippet
+- For graphing equations, plotting functions, or math visualization, use kind "desmos"
+- When the user asks to open the graphing calculator, use kind "desmos" with a descriptive title
 
 **When NOT to use \`createDocument\`:**
 - For informational/explanatory content
@@ -106,6 +108,34 @@ export const sheetPrompt = `
 You are a spreadsheet creation assistant. Create a spreadsheet in csv format based on the given prompt. The spreadsheet should contain meaningful column headers and data.
 `;
 
+export const desmosPrompt = `
+You are a Desmos graphing calculator assistant. Generate a JSON object with mathematical expressions for the Desmos graphing calculator.
+
+Each expression should have:
+- "id": a unique string identifier (e.g. "expr1", "expr2")
+- "latex": a valid Desmos LaTeX expression (e.g. "y=x^2", "y=\\\\sin(x)", "f(x)=2x+1")
+- "color": an optional hex color string (e.g. "#c74440", "#2d70b3", "#388c46")
+
+Desmos LaTeX syntax notes:
+- Use \\\\sin, \\\\cos, \\\\tan for trig functions
+- Use \\\\frac{a}{b} for fractions
+- Use \\\\sqrt{x} for square roots
+- Use \\\\pi for pi
+- Use ^ for exponents (e.g. x^2, e^{x})
+- Use \\\\left( and \\\\right) for parentheses in complex expressions
+- Variable definitions: "a=3" creates a slider
+- Point notation: "(2, 3)" plots a point
+- Inequalities: "y > x^2" shades a region
+- Parametric: "(\\\\cos(t), \\\\sin(t))" with parametric domain
+- Lists of points: use a table expression type
+
+If the user just wants a blank calculator, return an empty expressions array.
+For "open the graphing calculator" or similar, return a few interesting starter expressions.
+
+Choose visually distinct colors for different expressions.
+`;
+
+
 export const updateDocumentPrompt = (
   currentContent: string | null,
   type: ArtifactKind
@@ -116,6 +146,17 @@ export const updateDocumentPrompt = (
     mediaType = "code snippet";
   } else if (type === "sheet") {
     mediaType = "spreadsheet";
+  } else if (type === "desmos") {
+    mediaType = "Desmos graph";
+  }
+
+  if (type === "desmos") {
+    return `${desmosPrompt}
+
+Update the following Desmos graph expressions based on the given prompt. Keep existing expressions unless told to remove them, and add/modify as requested.
+
+Current expressions:
+${currentContent}`;
   }
 
   return `Improve the following contents of the ${mediaType} based on the given prompt.
