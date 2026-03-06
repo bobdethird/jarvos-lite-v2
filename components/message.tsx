@@ -1,5 +1,6 @@
 "use client";
 import type { UseChatHelpers } from "@ai-sdk/react";
+import type { ToolUIPart } from "ai";
 import { useState } from "react";
 import type { Vote } from "@/lib/db/schema";
 import type { ChatMessage } from "@/lib/types";
@@ -336,6 +337,57 @@ const PurePreviewMessage = ({
                             />
                           )
                         }
+                      />
+                    )}
+                  </ToolContent>
+                </Tool>
+              );
+            }
+
+            if (type.startsWith("tool-")) {
+              const toolPart = part as unknown as {
+                toolCallId: string;
+                state: ToolUIPart["state"];
+                input?: ToolUIPart["input"];
+                output?: unknown;
+                errorText?: string;
+              };
+              const { toolCallId, state } = toolPart;
+              const isCompleted = state === "output-available";
+
+              return (
+                <Tool
+                  defaultOpen={false}
+                  key={toolCallId}
+                >
+                  <ToolHeader
+                    state={state}
+                    type={type as ToolUIPart["type"]}
+                  />
+                  <ToolContent>
+                    {(state === "input-streaming" ||
+                      state === "input-available") && (
+                      <ToolInput input={toolPart.input} />
+                    )}
+                    {isCompleted && (
+                      <>
+                        <ToolInput input={toolPart.input} />
+                        <ToolOutput
+                          errorText={undefined}
+                          output={
+                            <pre className="p-3 font-mono text-xs">
+                              {JSON.stringify(toolPart.output, null, 2)}
+                            </pre>
+                          }
+                        />
+                      </>
+                    )}
+                    {state === "output-error" && (
+                      <ToolOutput
+                        errorText={
+                          toolPart.errorText ?? "An error occurred"
+                        }
+                        output={null}
                       />
                     )}
                   </ToolContent>
