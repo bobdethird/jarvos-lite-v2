@@ -18,6 +18,12 @@ type DesmosExpression = {
   [key: string]: unknown;
 };
 
+type ExpressionAnalysis = {
+  isGraphable?: boolean;
+  isError?: boolean;
+  errorMessage?: string;
+};
+
 type DesmosCalculatorInstance = {
   setExpression: (expr: Record<string, unknown>) => void;
   setExpressions: (exprs: Record<string, unknown>[]) => void;
@@ -39,6 +45,9 @@ type DesmosCalculatorInstance = {
   updateSettings: (settings: Record<string, unknown>) => void;
   observeEvent: (event: string, callback: () => void) => void;
   unobserveEvent: (event: string) => void;
+  observe: (property: string, callback: () => void) => void;
+  unobserve: (property: string) => void;
+  expressionAnalysis: Record<string, ExpressionAnalysis>;
 };
 
 type DesmosAPI = {
@@ -50,6 +59,7 @@ type DesmosAPI = {
 
 export type DesmosCalculatorHandle = {
   getExpressions: () => DesmosExpression[];
+  getExpressionErrors: () => Array<{ id: string; error: string }>;
   applyToolAction: (action: DesmosToolAction) => void;
   getInstance: () => DesmosCalculatorInstance | null;
 };
@@ -109,6 +119,7 @@ export const DesmosCalculatorStandalone = forwardRef<
 >(function DesmosCalculatorStandalone({ className, onReady }, ref) {
   const containerRef = useRef<HTMLDivElement>(null);
   const calculatorRef = useRef<DesmosCalculatorInstance | null>(null);
+  const expressionErrorsRef = useRef<Array<{ id: string; error: string }>>([]);
 
   const applyToolAction = useCallback((action: DesmosToolAction) => {
     const calc = calculatorRef.current;
@@ -194,6 +205,7 @@ export const DesmosCalculatorStandalone = forwardRef<
     ref,
     () => ({
       getExpressions: () => calculatorRef.current?.getExpressions() ?? [],
+      getExpressionErrors: () => expressionErrorsRef.current,
       applyToolAction,
       getInstance: () => calculatorRef.current,
     }),
@@ -221,6 +233,18 @@ export const DesmosCalculatorStandalone = forwardRef<
       });
 
       calculatorRef.current = calc;
+
+      calc.observe("expressionAnalysis", () => {
+        const analysis = calc.expressionAnalysis;
+        const errors: Array<{ id: string; error: string }> = [];
+        for (const [id, info] of Object.entries(analysis)) {
+          if (info.isError && info.errorMessage) {
+            errors.push({ id, error: info.errorMessage });
+          }
+        }
+        expressionErrorsRef.current = errors;
+      });
+
       onReady?.();
     };
 
@@ -229,6 +253,7 @@ export const DesmosCalculatorStandalone = forwardRef<
     return () => {
       mounted = false;
       if (calculatorRef.current) {
+        calculatorRef.current.unobserve("expressionAnalysis");
         calculatorRef.current.destroy();
         calculatorRef.current = null;
       }

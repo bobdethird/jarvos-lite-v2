@@ -4,8 +4,8 @@ import { DEFAULT_CHAT_MODEL } from "@/lib/ai/models";
 import { generateUUID } from "@/lib/utils";
 
 export default async function DesmosPage() {
-  const id = generateUUID();
   const cookieStore = await cookies();
+  const id = generateUUID();
   const chatModelFromCookie = cookieStore.get("chat-model");
 
   return (

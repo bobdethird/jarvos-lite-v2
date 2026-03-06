@@ -36,6 +36,15 @@ const expressionPropsSchema = z.object({
     })
     .optional()
     .describe("Restrict the domain of the expression"),
+  sliderBounds: z
+    .object({
+      min: z.string().optional().describe("Slider min as LaTeX, e.g. '-10'"),
+      max: z.string().optional().describe("Slider max as LaTeX, e.g. '10'"),
+      step: z.string().optional().describe("Slider step as LaTeX, e.g. '0.1'"),
+    })
+    .optional()
+    .describe("Bounds for slider expressions (e.g. 'a=1' creates a slider). Set min/max/step to control the range."),
+  playing: z.boolean().optional().describe("Whether the slider is animating"),
 });
 
 const updateExpressionSchema = expressionPropsSchema.partial().extend({

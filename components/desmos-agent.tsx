@@ -69,15 +69,18 @@ export function DesmosAgent({
         if (calculatorRef.current) {
           const expressions = calculatorRef.current.getExpressions();
           if (expressions.length > 0) {
-            desmosState = JSON.stringify(
-              expressions.map((e) => ({
+            const errors = calculatorRef.current.getExpressionErrors();
+            const errorMap = new Map(errors.map((e) => [e.id, e.error]));
+            desmosState = JSON.stringify({
+              expressions: expressions.map((e) => ({
                 id: e.id,
                 latex: e.latex,
                 color: e.color,
                 hidden: e.hidden,
                 type: e.type,
-              }))
-            );
+                ...(errorMap.has(e.id ?? "") ? { error: errorMap.get(e.id ?? "") } : {}),
+              })),
+            });
           }
         }
 
