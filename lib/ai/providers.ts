@@ -52,7 +52,7 @@ export function getTitleModel() {
   if (isTestEnvironment && myProvider) {
     return myProvider.languageModel("title-model");
   }
-  return gateway.languageModel("google/gemini-2.5-flash-lite");
+  return gateway.languageModel("google/gemini-3.1-flash-lite-preview");
 }
 
 export function getArtifactModel() {

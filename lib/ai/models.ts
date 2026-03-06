@@ -1,5 +1,5 @@
 // Curated list of top models from Vercel AI Gateway
-export const DEFAULT_CHAT_MODEL = "openai/gpt-4.1-mini";
+export const DEFAULT_CHAT_MODEL = "openai/gpt-5.3-chat";
 
 export type ChatModel = {
   id: string;
@@ -16,29 +16,35 @@ export const chatModels: ChatModel[] = [
     provider: "anthropic",
     description: "Fast and affordable, great for everyday tasks",
   },
+  {
+    id: "anthropic/claude-sonnet-4.6",
+    name: "Claude Sonnet 4.6",
+    provider: "anthropic",
+    description: "Balanced performance and capability",
+  },
   // OpenAI
   {
-    id: "openai/gpt-4.1-mini",
-    name: "GPT-4.1 Mini",
+    id: "openai/gpt-5.3-chat",
+    name: "GPT-5.3 Chat",
     provider: "openai",
-    description: "Fast and cost-effective for simple tasks",
+    description: "Capable and versatile for everyday tasks",
   },
   {
-    id: "openai/gpt-5-mini",
-    name: "GPT-5 Mini",
+    id: "openai/gpt-5.4",
+    name: "GPT-5.4",
     provider: "openai",
     description: "Most capable OpenAI model",
   },
   // Google
   {
-    id: "google/gemini-2.5-flash-lite",
-    name: "Gemini 2.5 Flash Lite",
+    id: "google/gemini-3.1-flash-lite-preview",
+    name: "Gemini 3.1 Flash Lite",
     provider: "google",
     description: "Ultra fast and affordable",
   },
   {
-    id: "google/gemini-3-pro-preview",
-    name: "Gemini 3 Pro",
+    id: "google/gemini-3.1-pro-preview",
+    name: "Gemini 3.1 Pro",
     provider: "google",
     description: "Most capable Google model",
   },
@@ -48,19 +54,6 @@ export const chatModels: ChatModel[] = [
     name: "Grok 4.1 Fast",
     provider: "xai",
     description: "Fast with 30K context",
-  },
-  // Reasoning models (extended thinking)
-  {
-    id: "anthropic/claude-3.7-sonnet-thinking",
-    name: "Claude 3.7 Sonnet",
-    provider: "reasoning",
-    description: "Extended thinking for complex problems",
-  },
-  {
-    id: "xai/grok-code-fast-1-thinking",
-    name: "Grok Code Fast",
-    provider: "reasoning",
-    description: "Reasoning optimized for code",
   },
 ];
 
